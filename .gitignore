@@ -1,0 +1,6 @@
+.venv/
+.vscode/
+target/
+dbt_packages/
+logs/
+
