@@ -1,0 +1,59 @@
+version: 2
+models:
+  - name: stg_popular_jobs
+    columns:
+      - name: country
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: job
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: company
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: score
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: open_jobs
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: data_collected
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: currency
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: min
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: max
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: likely
+        description: ""
+        meta:
+          dimension:
+            type: number
+      - name: period
+        description: ""
+        meta:
+          dimension:
+            type: string

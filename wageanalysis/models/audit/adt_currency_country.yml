@@ -1,0 +1,19 @@
+version: 2
+models:
+  - name: adt_currency_country
+    columns:
+      - name: country
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: currency
+        description: ""
+        meta:
+          dimension:
+            type: string
+      - name: currency_code
+        description: ""
+        meta:
+          dimension:
+            type: string
