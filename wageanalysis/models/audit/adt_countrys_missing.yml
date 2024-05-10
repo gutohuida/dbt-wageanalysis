@@ -1,0 +1,9 @@
+version: 2
+models:
+  - name: adt_countrys_missing
+    columns:
+      - name: country
+        description: ""
+        meta:
+          dimension:
+            type: string

@@ -26,10 +26,11 @@ from {{ref('stg_country_job_info')}} scji),
 
 exchange_rate_rank as (
 select
-	ce.currency,
+	ce.currency_from as currency,
 	ce.exchange_rate,
-	row_number() over (partition by currency order by insert_date desc) as currency_rank
+	row_number() over (partition by currency_from order by insert_date desc) as currency_rank
 from {{source('raw','currency_exchange')}} ce
+where currency_to = 'BRL'
 ),
 
 lattest_exchange as (
@@ -75,36 +76,36 @@ select
 	job, 
 	currency,
 	case
-		when "period" = 'mo' then ((pay / exchange_rate) * 12)::numeric
-		else (pay / exchange_rate)::numeric
+		when "period" = 'mo' then round(((pay / exchange_rate) * 12)::numeric, 2)
+		else round((pay / exchange_rate)::numeric, 2)
 	end	as pay,
 	case
-		when "period" = 'mo' then ((average_salary / exchange_rate) * 12)::numeric
-		else (average_salary / exchange_rate)::numeric
+		when "period" = 'mo' then round(((average_salary / exchange_rate) * 12)::numeric, 2)
+		else round((average_salary / exchange_rate)::numeric, 2)
 	end	as average_salary,
 	case
-		when "period" = 'mo' then ((pay_range_min / exchange_rate) * 12)::numeric
-		else (pay_range_min / exchange_rate)::numeric
+		when "period" = 'mo' then round(((pay_range_min / exchange_rate) * 12)::numeric, 2)
+		else round((pay_range_min / exchange_rate)::numeric, 2)
 	end	as pay_range_min, 
 	case
-		when "period" = 'mo' then ((pay_range_max / exchange_rate) * 12)::numeric
-		else (pay_range_max / exchange_rate)::numeric
+		when "period" = 'mo' then round(((pay_range_max / exchange_rate) * 12)::numeric, 2)
+		else round((pay_range_max / exchange_rate)::numeric, 2)
 	end	as pay_range_max, 
 	case
-		when "period" = 'mo' then ((base_pay_min / exchange_rate) * 12)::numeric
-		else (base_pay_min / exchange_rate)::numeric
+		when "period" = 'mo' then round(((base_pay_min / exchange_rate) * 12)::numeric, 2)
+		else round((base_pay_min / exchange_rate)::numeric, 2)
 	end	as base_pay_min,
 	case
-		when "period" = 'mo' then ((base_pay_max / exchange_rate) * 12)::numeric
-		else (base_pay_max / exchange_rate)::numeric
+		when "period" = 'mo' then round(((base_pay_max / exchange_rate) * 12)::numeric, 2)
+		else round((base_pay_max / exchange_rate)::numeric, 2)
 	end	as base_pay_max,
 	case
-		when "period" = 'mo' then ((additional_pay_min / exchange_rate) * 12)::numeric
-		else (additional_pay_min / exchange_rate)::numeric
+		when "period" = 'mo' then round(((additional_pay_min / exchange_rate) * 12)::numeric, 2)
+		else round((additional_pay_min / exchange_rate)::numeric, 2)
 	end	as additional_pay_min,
 	case
-		when "period" = 'mo' then ((additional_pay_max / exchange_rate) * 12)::numeric
-		else (additional_pay_max / exchange_rate)::numeric
+		when "period" = 'mo' then round(((additional_pay_max / exchange_rate) * 12)::numeric, 2)
+		else round((additional_pay_max / exchange_rate)::numeric, 2)
 	end	as additional_pay_max,
 	"period" as base_period, 
 	last_update
