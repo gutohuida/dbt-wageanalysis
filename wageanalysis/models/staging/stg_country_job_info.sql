@@ -10,6 +10,7 @@ select
 	substring(estimated_pay, '(\D+)$') as number_format, 
     right("period",2) as "period", 
     case 
+        when trim(substring(country_job_info.last_update::text, 'Updated'::text)) is null then null::date
 		when trim(substring(last_update ,'(?!Updated) .*')) = '' then null
 		else to_date(trim(substring(last_update ,'(?!Updated) .*')), 'MON DD, YYYY') 
 	end as last_update,
@@ -44,12 +45,15 @@ select distinct
         when currency = '₩'   then 'KRW'
         when currency = '₪'   then 'ILS'
         when currency = '¥'   then 'JPY'
+        when currency = '₱'   then 'PHP'
+        when currency = '₫'   then 'VND'
         when currency = 'A$'  then 'AUD'
         when currency = 'R$'  then 'BRL'
         when currency = 'CA$' then 'CAD'
         when currency = 'CN¥' then 'CNY'
         when currency = 'MX$' then 'MXN'
         when currency = 'NZ$' then 'NZD'
+        when currency = 'NT$' then 'TWD'
         else currency
     end as currency,
     case
