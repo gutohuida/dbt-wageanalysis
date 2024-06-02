@@ -34,4 +34,6 @@ models:
     intermediate:
       +materialized: view
     audit:
+      +materialized: view
+    dtm:
       +materialized: view     

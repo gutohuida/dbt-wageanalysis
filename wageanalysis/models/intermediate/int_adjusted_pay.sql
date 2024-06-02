@@ -1,7 +1,6 @@
 {{
   config(
     materialized='view',
-    tags=['lightdash']
   )
 }}
 
@@ -24,27 +23,12 @@ select
 	row_number() over (partition by country, job order by last_update desc) as job_rank
 from {{ref('stg_country_job_info')}} scji),
 
-exchange_rate_rank as (
-select
-	ce.currency_from as currency,
-	ce.exchange_rate,
-	row_number() over (partition by currency_from order by insert_date desc) as currency_rank
-from {{source('raw','currency_exchange')}} ce
-where currency_to = 'BRL'
-),
-
-lattest_exchange as (
-select 
-	*
-from exchange_rate_rank
-where currency_rank = 1
-),
-
 joined as (
 select 
 	lcji.country,
 	lcji.job, 
-	lcji.currency, 
+	lcji.currency,
+	le.currency_to, 
 	lcji.pay, 
 	lcji."period", 
 	lcji.last_update, 
@@ -63,7 +47,7 @@ select
 from lattest_country_job_info lcji
 join {{source('raw','countrys')}} c 
 on lower(lcji.country) = lower(c."name")
-join lattest_exchange le 
+join {{ref('int_lattest_exchange')}} le 
 on c.currency_code = le.currency 
 where job_rank = 1
 and concat_ws('-', lcji.country, lcji.currency, c.currency_code) 
@@ -75,6 +59,7 @@ select
 	country,
 	job, 
 	currency,
+	currency_to,
 	case
 		when "period" = 'mo' then round(((pay / exchange_rate) * 12)::numeric, 2)
 		else round((pay / exchange_rate)::numeric, 2)

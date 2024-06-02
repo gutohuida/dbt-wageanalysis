@@ -9,3 +9,5 @@ sources:
       - name: popular_companies
       - name: countrys
       - name: currency_exchange
+      - name: country_expenses
+      - name: country_expenses_detail
