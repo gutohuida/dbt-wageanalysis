@@ -14,6 +14,7 @@ select
 	substring(replace(amount, ',', ''), '\d+.\d+')::numeric as amount,
 	trim(substring(trim(replace(replace(amount, ',', ''), '.', '')), '\D+')) as currency,
 	substring(replace(replace("range", chr(10),''),',',''), '^(\d+.\d+)')::numeric as pay_min,
-	substring(replace(replace("range", chr(10),''),',',''), '(\d+.\d+)$')::numeric as pay_max
+	substring(replace(replace("range", chr(10),''),',',''), '(\d+.\d+)$')::numeric as pay_max,
+	insert_date
 from lattest
 where rank = 1

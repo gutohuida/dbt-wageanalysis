@@ -11,3 +11,4 @@ sources:
       - name: currency_exchange
       - name: country_expenses
       - name: country_expenses_detail
+      - name: country_continent

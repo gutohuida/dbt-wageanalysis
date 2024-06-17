@@ -14,7 +14,8 @@ select
 	substring(replace(max, ',', ''),'(\D+)$') as max_format, 
 	cast(substring(replace(likely, ',', ''),'\d+') as numeric) as likely,
 	substring(replace(likely, ',', ''),'(\D+)$') as likely_format, 
-	right("period",2) as period
+	right("period",2) as period,
+    insert_date
 from {{ source('raw','popular_companies')}})
 
 
@@ -55,6 +56,7 @@ select distinct
         when likely_format = 'M' then likely * 1000000
         else likely
     end as likely,
-    "period"
+    "period",
+    insert_date
 from treated
 where country = country_found

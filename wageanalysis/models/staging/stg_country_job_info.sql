@@ -94,6 +94,7 @@ select distinct
         when additional_pay_max_format = 'K' then additional_pay_max * 1000
         when additional_pay_max_format = 'M' then additional_pay_max * 1000000
         else additional_pay_max
-    end as additional_pay_max
+    end as additional_pay_max,
+    insert_date
 from treated
 where country = country_found

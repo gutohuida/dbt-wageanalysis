@@ -1,7 +1,7 @@
 {{
-  config(
-    materialized='view',
-  )
+    config(
+        materialized='incremental'
+    )
 }}
 
 with lattest_country_job_info as (
@@ -20,7 +20,8 @@ select
 	base_pay_max, 
 	additional_pay_min, 
 	additional_pay_max,
-	row_number() over (partition by country, job order by last_update desc) as job_rank
+	insert_date,
+	row_number() over (partition by country, job order by last_update desc, insert_date desc) as job_rank
 from {{ref('stg_country_job_info')}} scji),
 
 joined as (
@@ -43,7 +44,8 @@ select
 	c."name",
 	c.currency_name,
 	c.currency_code,
-	le.exchange_rate 
+	le.exchange_rate,
+	lcji.insert_date
 from lattest_country_job_info lcji
 join {{source('raw','countrys')}} c 
 on lower(lcji.country) = lower(c."name")
@@ -93,5 +95,14 @@ select
 		else round((additional_pay_max / exchange_rate)::numeric, 2)
 	end	as additional_pay_max,
 	"period" as base_period, 
-	last_update
+	last_update,
+	insert_date
 from joined
+
+{% if is_incremental() %}
+
+  -- this filter will only be applied on an incremental run
+  -- (uses >= to include records arriving later on the same day as the last run of this model)
+  where insert_date > (select coalesce(max(insert_date), '1900-01-01') from {{ this }})
+
+{% endif %}

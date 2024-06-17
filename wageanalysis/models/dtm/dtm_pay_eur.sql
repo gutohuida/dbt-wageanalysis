@@ -7,7 +7,7 @@
 
 select 
     iap.country,
-    coalesce(cc.continent, 'Not found') as continent, 
+    coalesce(cc.continent, 'Not found') as continent,
     iap.job, 
     iap.currency, 
     iap.pay, 
@@ -23,4 +23,4 @@ select
 from {{ref('int_adjusted_pay')}} iap
 left join {{source('raw','country_continent')}} cc
 on lower(iap.country) = lower(cc.name)
-where currency_to = 'USD'
+where currency_to = 'EUR'
